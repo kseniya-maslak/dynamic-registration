@@ -8,6 +8,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./dashboard/dashboard.module').then(m => m.DashboardModule),
   },
+  {
+    path: 'welcome',
+    loadChildren: () =>
+      import('./welcome/welcome.module').then(m => m.WelcomeModule),
+  },
 ];
 
 @NgModule({
