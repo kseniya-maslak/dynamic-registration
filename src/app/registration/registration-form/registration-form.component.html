@@ -1,0 +1,18 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitForm()">
+  <ng-container *ngFor="let field of registrationFields">
+    <mat-form-field>
+      <mat-label>{{ field.label }}</mat-label>
+      <input [type]="field.type" [formControlName]="field.name" matInput />
+      <mat-error *ngIf="form.controls[field.name].invalid">{{
+        getErrorMessage(form.controls[field.name])
+      }}</mat-error>
+    </mat-form-field>
+  </ng-container>
+  <button
+    type="submit"
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid">
+    Submit
+  </button>
+</form>
