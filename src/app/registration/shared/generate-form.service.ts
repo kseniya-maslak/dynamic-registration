@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RegistrationField } from './registration-field.model';
-import {
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import { FieldValidation } from './field-validation.model';
-import { SupportedValidatorsEnum } from './supported-validators.enum';
+import { FormControl, FormGroup } from '@angular/forms';
+import { GenerateValidatorService } from './generate-validator.service';
 
 @Injectable()
 export class GenerateFormService {
-  constructor() {}
+  constructor(private validatorService: GenerateValidatorService) {}
 
   generateForm(registrationFields: RegistrationField[]) {
     let form: { [key: string]: FormControl } = {};
@@ -22,39 +16,8 @@ export class GenerateFormService {
   }
 
   private generateFormControl(formField: RegistrationField): FormControl {
-    const validator = this.generateValidatorFunction(formField);
+    const validator =
+      this.validatorService.generateValidatorFunction(formField);
     return new FormControl('', validator);
-  }
-
-  private generateValidatorFunction(formField: RegistrationField): ValidatorFn {
-    return control => {
-      if (formField.required) {
-        if (Validators.required(control)) {
-          return { error: `${formField.label} is required` };
-        }
-      }
-      if (formField.validations) {
-        for (let validation of formField.validations) {
-          const error = this.getValidator(validation)(control);
-          if (error) {
-            return { error: validation.message };
-          }
-        }
-      }
-      return null;
-    };
-  }
-
-  private getValidator(validation: FieldValidation): ValidatorFn {
-    switch (validation.name) {
-      case SupportedValidatorsEnum.REGEX:
-        return Validators.pattern(<string>validation.value);
-      case SupportedValidatorsEnum.MAXLENGTH:
-        return Validators.maxLength(<number>validation.value);
-      case SupportedValidatorsEnum.MINLENGTH:
-        return Validators.minLength(<number>validation.value);
-      default:
-        return () => null;
-    }
   }
 }

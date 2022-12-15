@@ -12,6 +12,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { GenerateValidatorService } from './shared/generate-validator.service';
+import { RegistrationService } from './shared/registration.service';
 
 const routes: Routes = [
   {
@@ -34,6 +36,8 @@ const routes: Routes = [
   ],
   providers: [
     GenerateFormService,
+    GenerateValidatorService,
+    RegistrationService,
     environment.mock
       ? [
           {

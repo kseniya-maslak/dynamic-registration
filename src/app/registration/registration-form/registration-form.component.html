@@ -2,7 +2,11 @@
   <ng-container *ngFor="let field of registrationFields">
     <mat-form-field>
       <mat-label>{{ field.label }}</mat-label>
-      <input [type]="field.type" [formControlName]="field.name" matInput />
+      <input
+        [type]="field.type"
+        [formControlName]="field.name"
+        matInput
+        [id]="field.name + '-field'" />
       <mat-error *ngIf="form.controls[field.name].invalid">{{
         getErrorMessage(form.controls[field.name])
       }}</mat-error>
@@ -12,6 +16,7 @@
     type="submit"
     mat-raised-button
     color="primary"
+    id="submit-registration-form"
     [disabled]="form.invalid">
     Submit
   </button>
