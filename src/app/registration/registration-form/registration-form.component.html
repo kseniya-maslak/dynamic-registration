@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitForm()" class="registration-form">
+  <ng-container *ngFor="let field of registrationFields">
+    <mat-form-field>
+      <mat-label>{{ field.label }}</mat-label>
+      <input
+        [type]="field.type"
+        [formControlName]="field.name"
+        matInput
+        [appPasswordToggle]="field.type === 'password'"
+        [id]="field.name + '-field'" />
+      <mat-error *ngIf="form.controls[field.name].invalid">{{
+        getErrorMessage(form.controls[field.name])
+      }}</mat-error>
+    </mat-form-field>
+  </ng-container>
+  <button
+    type="submit"
+    mat-raised-button
+    color="primary"
+    id="submit-registration-form"
+    [disabled]="form.invalid">
+    Submit
+  </button>
+</form>

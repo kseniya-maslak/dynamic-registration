@@ -1,0 +1,142 @@
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+
+import { RegistrationComponent } from './registration.component';
+import { RegistrationField } from '../shared/registration-field.model';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { MatProgressSpinnerHarness } from '@angular/material/progress-spinner/testing';
+import {
+  Component,
+  EventEmitter,
+  Injectable,
+  Input,
+  Output,
+} from '@angular/core';
+import { RegistrationService } from '../shared/registration.service';
+import { first, Subject } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Location } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RegistrationRequest } from '../shared/registration-request.model';
+
+let fields$: Subject<RegistrationField[]>;
+let response$: Subject<null>;
+
+@Injectable()
+class MockRegistrationService {
+  requestRegistrationFields() {
+    return fields$.pipe(first());
+  }
+
+  submitRegistration() {
+    return response$.pipe(first());
+  }
+}
+
+@Component({
+  template: '',
+})
+class DummyComponent {}
+
+@Component({
+  selector: 'app-registration-form',
+  template: '',
+})
+class MockRegistrationFormComponent {
+  @Input()
+  registrationFields: RegistrationField[] = [];
+
+  @Output()
+  submitForm = new EventEmitter<RegistrationRequest>();
+}
+
+const mock: RegistrationField[] = [
+  {
+    type: 'phone',
+    name: 'phone_number',
+    label: 'Mobile number',
+    required: true,
+    validations: [
+      {
+        name: 'regex',
+        message: 'Only numbers are allowed.',
+        value: '^[0-9]+$',
+      },
+      {
+        name: 'maxlength',
+        message: 'Must be less than 47 characters.',
+        value: 10,
+      },
+      {
+        name: 'minlength',
+        message: 'Must not be less than 4 characters.',
+        value: 4,
+      },
+    ],
+  },
+];
+describe('RegistrationComponent', () => {
+  let component: RegistrationComponent;
+  let fixture: ComponentFixture<RegistrationComponent>;
+  let loader: HarnessLoader;
+  let location: Location;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        MatProgressSpinnerModule,
+        RouterTestingModule.withRoutes([
+          { path: 'welcome', component: DummyComponent },
+        ]),
+      ],
+      declarations: [RegistrationComponent, MockRegistrationFormComponent],
+      providers: [
+        {
+          provide: RegistrationService,
+          useClass: MockRegistrationService,
+        },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(RegistrationComponent);
+    location = TestBed.inject(Location);
+    component = fixture.componentInstance;
+    loader = TestbedHarnessEnvironment.loader(fixture);
+    fields$ = new Subject();
+    response$ = new Subject();
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should show loader', async () => {
+    let spinner = await loader.hasHarness(MatProgressSpinnerHarness);
+    expect(spinner).toBeTruthy();
+    fields$.next(mock);
+    spinner = await loader.hasHarness(MatProgressSpinnerHarness);
+    expect(spinner).toBeFalsy();
+  });
+
+  it('should navigate to welcome on success submit', fakeAsync(() => {
+    component.onSubmitForm({});
+    expect(location.path()).toEqual('');
+    response$.next(null);
+    tick();
+    expect(location.path()).toEqual('/welcome');
+  }));
+
+  it('should not navigate on failed submit', fakeAsync(() => {
+    component.onSubmitForm({});
+    expect(location.path()).toEqual('');
+    response$.error({});
+    tick();
+    expect(location.path()).toEqual('');
+  }));
+});

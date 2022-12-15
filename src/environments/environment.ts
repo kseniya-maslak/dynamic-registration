@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  mock: true,
+  registrationFieldApi: 'api/registration-field',
+  registrationApi: 'api/registration',
 };
 
 /*

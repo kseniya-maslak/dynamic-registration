@@ -1,0 +1,5 @@
+<mat-spinner *ngIf="loading$ | async"></mat-spinner>
+<app-registration-form
+  [hidden]="loading$ | async"
+  (submitForm)="onSubmitForm($event)"
+  [registrationFields]="registrationFields"></app-registration-form>
