@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { GenerateValidatorService } from './shared/generate-validator.service';
 import { RegistrationService } from './shared/registration.service';
+import { PasswordToggleDirective } from './shared/password-toggle.directive';
 
 const routes: Routes = [
   {
@@ -23,7 +24,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [RegistrationComponent, RegistrationFormComponent],
+  declarations: [
+    RegistrationComponent,
+    RegistrationFormComponent,
+    PasswordToggleDirective,
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

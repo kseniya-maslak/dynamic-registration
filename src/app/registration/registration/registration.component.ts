@@ -31,6 +31,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmitForm(registrationRequest: RegistrationRequest) {
+    this.loading$.next(true);
     this.registrationService.submitRegistration(registrationRequest).subscribe({
       next: () => {
         this.router.navigate(['../welcome']).then();

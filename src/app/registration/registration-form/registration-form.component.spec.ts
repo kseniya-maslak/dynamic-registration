@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegistrationFormComponent } from './registration-form.component';
 import { GenerateFormService } from '../shared/generate-form.service';
-import { Injectable } from '@angular/core';
+import { Directive, Injectable, Input } from '@angular/core';
 import { RegistrationField } from '../shared/registration-field.model';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -47,6 +47,12 @@ class MockGenerateFormService {
   }
 }
 
+@Directive({ selector: 'input[appPasswordToggle]' })
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+class MockAppPasswordToggle {
+  @Input('appPasswordToggle') apply = true;
+}
+
 describe('RegistrationFormComponent', () => {
   let component: RegistrationFormComponent;
   let fixture: ComponentFixture<RegistrationFormComponent>;
@@ -55,7 +61,7 @@ describe('RegistrationFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatInputModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [RegistrationFormComponent],
+      declarations: [RegistrationFormComponent, MockAppPasswordToggle],
       providers: [
         { provide: GenerateFormService, useClass: MockGenerateFormService },
       ],
