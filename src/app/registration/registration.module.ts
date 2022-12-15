@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MockRequestInterceptor } from './shared/mock-request.interceptor';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RegistrationFormComponent } from './registration-form/registration-form.component';
 import { GenerateFormService } from './shared/generate-form.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { GenerateValidatorService } from './shared/generate-validator.service';
 import { RegistrationService } from './shared/registration.service';
 import { PasswordToggleDirective } from './shared/password-toggle.directive';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const routes: Routes = [
   {
@@ -33,11 +33,11 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     HttpClientModule,
-    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatProgressBarModule,
   ],
   providers: [
     GenerateFormService,

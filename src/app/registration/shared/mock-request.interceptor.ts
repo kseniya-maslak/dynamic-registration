@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
+  HttpHandler,
   HttpInterceptor,
+  HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';

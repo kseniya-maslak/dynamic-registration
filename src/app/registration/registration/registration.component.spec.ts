@@ -9,7 +9,6 @@ import { RegistrationComponent } from './registration.component';
 import { RegistrationField } from '../shared/registration-field.model';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
-import { MatProgressSpinnerHarness } from '@angular/material/progress-spinner/testing';
 import {
   Component,
   EventEmitter,
@@ -19,10 +18,11 @@ import {
 } from '@angular/core';
 import { RegistrationService } from '../shared/registration.service';
 import { first, Subject } from 'rxjs';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RegistrationRequest } from '../shared/registration-request.model';
+import { MatProgressBarHarness } from '@angular/material/progress-bar/testing';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 let fields$: Subject<RegistrationField[]>;
 let response$: Subject<null>;
@@ -89,7 +89,7 @@ describe('RegistrationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        MatProgressSpinnerModule,
+        MatProgressBarModule,
         RouterTestingModule.withRoutes([
           { path: 'welcome', component: DummyComponent },
         ]),
@@ -117,10 +117,10 @@ describe('RegistrationComponent', () => {
   });
 
   it('should show loader', async () => {
-    let spinner = await loader.hasHarness(MatProgressSpinnerHarness);
+    let spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeTruthy();
     fields$.next(mock);
-    spinner = await loader.hasHarness(MatProgressSpinnerHarness);
+    spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeFalsy();
   });
 

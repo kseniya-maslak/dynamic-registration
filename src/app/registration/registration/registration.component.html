@@ -1,4 +1,6 @@
-<mat-spinner *ngIf="loading$ | async"></mat-spinner>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"></mat-progress-bar>
 <app-registration-form
   [hidden]="loading$ | async"
   (submitForm)="onSubmitForm($event)"
