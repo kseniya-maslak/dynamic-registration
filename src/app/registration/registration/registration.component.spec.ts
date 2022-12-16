@@ -90,6 +90,7 @@ describe('RegistrationComponent', () => {
   let fixture: ComponentFixture<RegistrationComponent>;
   let loader: HarnessLoader;
   let location: Location;
+  let toastrService: ToastrService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -114,6 +115,7 @@ describe('RegistrationComponent', () => {
 
     fixture = TestBed.createComponent(RegistrationComponent);
     location = TestBed.inject(Location);
+    toastrService = TestBed.inject(ToastrService);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
     fields$ = new Subject();
@@ -133,6 +135,14 @@ describe('RegistrationComponent', () => {
     expect(spinner).toBeFalsy();
   });
 
+  it('should show error on failed form request', async () => {
+    spyOn(toastrService, 'error');
+    fields$.error('Some error');
+    let spinner = await loader.hasHarness(MatProgressBarHarness);
+    expect(spinner).toBeTruthy();
+    expect(toastrService.error).toHaveBeenCalled();
+  });
+
   it('should navigate to welcome on success submit', fakeAsync(() => {
     component.onSubmitForm({});
     expect(location.path()).toEqual('');
@@ -142,10 +152,12 @@ describe('RegistrationComponent', () => {
   }));
 
   it('should not navigate on failed submit', fakeAsync(() => {
+    spyOn(toastrService, 'error');
     component.onSubmitForm({});
     expect(location.path()).toEqual('');
     response$.error({});
     tick();
     expect(location.path()).toEqual('');
+    expect(toastrService.error).toHaveBeenCalled();
   }));
 });
