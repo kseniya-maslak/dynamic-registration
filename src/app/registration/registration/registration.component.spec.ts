@@ -23,6 +23,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RegistrationRequest } from '../shared/registration-request.model';
 import { MatProgressBarHarness } from '@angular/material/progress-bar/testing';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ToastrService } from 'ngx-toastr';
 
 let fields$: Subject<RegistrationField[]>;
 let response$: Subject<null>;
@@ -36,6 +37,10 @@ class MockRegistrationService {
   submitRegistration() {
     return response$.pipe(first());
   }
+}
+@Injectable()
+class MockToastrService {
+  error() {}
 }
 
 @Component({
@@ -99,6 +104,10 @@ describe('RegistrationComponent', () => {
         {
           provide: RegistrationService,
           useClass: MockRegistrationService,
+        },
+        {
+          provide: ToastrService,
+          useClass: MockToastrService,
         },
       ],
     }).compileComponents();
