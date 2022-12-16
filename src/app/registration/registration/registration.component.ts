@@ -4,6 +4,7 @@ import { RegistrationField } from '../shared/registration-field.model';
 import { RegistrationRequest } from '../shared/registration-request.model';
 import { Router } from '@angular/router';
 import { RegistrationService } from '../shared/registration.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -16,13 +17,20 @@ export class RegistrationComponent implements OnInit {
 
   constructor(
     private registrationService: RegistrationService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
     this.registrationService.requestRegistrationFields().subscribe({
       next: registrationFields => {
         this.registrationFields = registrationFields;
+      },
+      error: () => {
+        this.toastr.error(
+          'Error occurred while downloading form. Try again later.',
+          'Form not created'
+        );
       },
       complete: () => {
         this.loading$.next(false);
@@ -36,7 +44,13 @@ export class RegistrationComponent implements OnInit {
       next: () => {
         this.router.navigate(['../welcome']).then();
       },
-      error: () => {},
+      error: () => {
+        this.toastr.error(
+          'Error occurred while submitting form. Try again later.',
+          'Form not submitted'
+        );
+        this.loading$.next(false);
+      },
     });
   }
 }

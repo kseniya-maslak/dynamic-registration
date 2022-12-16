@@ -7,9 +7,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
-import { registrationFieldsResponse } from '../../../mock/registration-fields-response.mock';
 import { environment } from '../../../environments/environment';
-import { RegistrationField } from './registration-field.model';
 
 @Injectable()
 export class MockRequestInterceptor implements HttpInterceptor {
@@ -19,30 +17,20 @@ export class MockRequestInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    let response: HttpResponse<unknown>;
     if (
       request.method === 'GET' &&
       request.url === environment.registrationFieldApi
     ) {
-      response = this.mockGetRegistrationFieldsResponse();
+      request = request.clone({
+        url: 'assets/mock/registration-fields-response.mock.json',
+      });
     } else if (
       request.method === 'POST' &&
       request.url === environment.registrationApi
     ) {
-      response = this.mockPostRegistrationResponse();
-    } else {
-      return next.handle(request);
+      return of(this.mockPostRegistrationResponse()).pipe(delay(1000));
     }
-    return of(response).pipe(delay(5000));
-  }
-
-  private mockGetRegistrationFieldsResponse(): HttpResponse<
-    RegistrationField[]
-  > {
-    return new HttpResponse({
-      status: 200,
-      body: registrationFieldsResponse,
-    });
+    return next.handle(request);
   }
 
   private mockPostRegistrationResponse(): HttpResponse<null> {
