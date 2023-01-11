@@ -66,19 +66,19 @@ describe('GenerateValidatorService', () => {
     expect(control.getError('error')).toBe('Only numbers are allowed.');
   });
 
-  it('validator should return error first if conflict', () => {
+  it('validator should return first error if conflict', () => {
     control.setValue('a');
     expect(control.hasError('error')).toBeTruthy();
     expect(control.getError('error')).toBe('Only numbers are allowed.');
   });
 
-  it('validator should return error by empty', () => {
+  it('validator should return error if empty', () => {
     control.setValue('');
     expect(control.hasError('error')).toBeTruthy();
     expect(control.getError('error')).toBe('Mobile number is required');
   });
 
-  it('validator should return error by empty', () => {
+  it('validator should return no error if valid', () => {
     control.setValue('12345');
     expect(control.hasError('error')).toBeFalse();
   });

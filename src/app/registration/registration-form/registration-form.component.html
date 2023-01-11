@@ -3,10 +3,9 @@
     <mat-form-field>
       <mat-label>{{ field.label }}</mat-label>
       <input
-        [type]="field.type"
         [formControlName]="field.name"
         matInput
-        [appPasswordToggle]="field.type === 'password'"
+        [appCustomInputType]="field.type"
         [id]="field.name + '-field'" />
       <mat-error *ngIf="form.controls[field.name].invalid">{{
         getErrorMessage(form.controls[field.name])
