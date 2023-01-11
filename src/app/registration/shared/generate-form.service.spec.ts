@@ -1,30 +1,32 @@
 import { TestBed } from '@angular/core/testing';
 
 import { GenerateFormService } from './generate-form.service';
-import { RegistrationField } from './registration-field.model';
+import { RegistrationField } from '../model/registration-field.model';
 import { Injectable } from '@angular/core';
 import { GenerateValidatorService } from './generate-validator.service';
 import { ValidatorFn } from '@angular/forms';
+import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
 
 const mock: RegistrationField[] = [
   {
-    type: 'phone',
+    type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
     label: 'Mobile number',
     required: true,
     validations: [
       {
-        name: 'regex',
+        name: SupportedValidatorsEnum.REGEX,
         message: 'Only numbers are allowed.',
         value: '^[0-9]+$',
       },
       {
-        name: 'maxlength',
+        name: SupportedValidatorsEnum.MAXLENGTH,
         message: 'Must be less than 47 characters.',
         value: 10,
       },
       {
-        name: 'minlength',
+        name: SupportedValidatorsEnum.MINLENGTH,
         message: 'Must not be less than 4 characters.',
         value: 4,
       },

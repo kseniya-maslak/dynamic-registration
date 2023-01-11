@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RegistrationField } from '../shared/registration-field.model';
+import { RegistrationField } from '../model/registration-field.model';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { GenerateFormService } from '../shared/generate-form.service';
-import { RegistrationRequest } from '../shared/registration-request.model';
+import { RegistrationRequest } from '../model/registration-request.model';
 
 @Component({
   selector: 'app-registration-form',

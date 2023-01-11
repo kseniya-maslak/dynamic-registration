@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RegistrationField } from '../shared/registration-field.model';
-import { RegistrationRequest } from '../shared/registration-request.model';
+import { RegistrationField } from '../model/registration-field.model';
+import { RegistrationRequest } from '../model/registration-request.model';
 import { Router } from '@angular/router';
 import { RegistrationService } from '../shared/registration.service';
 import { ToastrService } from 'ngx-toastr';

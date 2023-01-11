@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RegistrationField } from './registration-field.model';
+import { RegistrationField } from '../model/registration-field.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { GenerateValidatorService } from './generate-validator.service';
 
