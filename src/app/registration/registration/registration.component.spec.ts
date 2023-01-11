@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 
 import { RegistrationComponent } from './registration.component';
-import { RegistrationField } from '../shared/registration-field.model';
+import { RegistrationField } from '../model/registration-field.model';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import {
@@ -20,10 +20,12 @@ import { RegistrationService } from '../shared/registration.service';
 import { first, Subject } from 'rxjs';
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RegistrationRequest } from '../shared/registration-request.model';
+import { RegistrationRequest } from '../model/registration-request.model';
 import { MatProgressBarHarness } from '@angular/material/progress-bar/testing';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ToastrService } from 'ngx-toastr';
+import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
 
 let fields$: Subject<RegistrationField[]>;
 let response$: Subject<null>;
@@ -62,23 +64,23 @@ class MockRegistrationFormComponent {
 
 const mock: RegistrationField[] = [
   {
-    type: 'phone',
+    type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
     label: 'Mobile number',
     required: true,
     validations: [
       {
-        name: 'regex',
+        name: SupportedValidatorsEnum.REGEX,
         message: 'Only numbers are allowed.',
         value: '^[0-9]+$',
       },
       {
-        name: 'maxlength',
+        name: SupportedValidatorsEnum.MAXLENGTH,
         message: 'Must be less than 47 characters.',
         value: 10,
       },
       {
-        name: 'minlength',
+        name: SupportedValidatorsEnum.MINLENGTH,
         message: 'Must not be less than 4 characters.',
         value: 4,
       },

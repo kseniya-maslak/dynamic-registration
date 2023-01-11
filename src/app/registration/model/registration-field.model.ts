@@ -1,29 +1,35 @@
 import { FieldValidation } from './field-validation.model';
 import {
+  IsArray,
   IsBoolean,
-  IsIn,
+  IsEnum,
   IsOptional,
   IsString,
   MinLength,
   ValidateNested,
 } from 'class-validator';
+import { IsFieldValidationCorrect } from './is-field-validation-correct.validator';
+import { SupportedFieldTypesEnum } from './supported-field-types.enum';
 
 export class RegistrationField {
-  @IsIn(['text', 'email', 'phone', 'password'])
-  type: 'text' | 'email' | 'phone' | 'password' = 'text';
+  @IsEnum(SupportedFieldTypesEnum)
+  type: SupportedFieldTypesEnum;
   @IsString()
   @MinLength(1)
-  name: string = '';
+  name: string;
   @IsString()
   @MinLength(1)
-  label: string = '';
+  label: string;
   @IsBoolean()
-  required: boolean = false;
+  required: boolean;
   @IsOptional()
+  @IsArray()
   @ValidateNested()
+  @IsFieldValidationCorrect({ each: true })
   validations?: FieldValidation[];
 
   constructor(object: RegistrationField) {
+    this.type = object.type;
     this.name = object.name;
     this.label = object.label;
     this.required = object.required;

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { RegistrationField } from './registration-field.model';
+import { RegistrationField } from '../model/registration-field.model';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { RegistrationRequest } from './registration-request.model';
+import { map, Observable } from 'rxjs';
+import { RegistrationRequest } from '../model/registration-request.model';
 import { validateSync } from 'class-validator';
-import { RegistrationForm } from './registration-form.model';
+import { RegistrationForm } from '../model/registration-form.model';
 
 @Injectable()
 export class RegistrationService {
@@ -15,12 +15,13 @@ export class RegistrationService {
     return this.http
       .get<RegistrationField[]>(environment.registrationFieldApi)
       .pipe(
-        tap(fields => {
+        map(fields => {
           const form = new RegistrationForm(fields);
           const error = validateSync(form);
           if (error.length !== 0) {
             throw new Error('Form validation error');
           }
+          return form.form;
         })
       );
   }
