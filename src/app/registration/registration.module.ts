@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { GenerateValidatorService } from './shared/generate-validator.service';
 import { RegistrationService } from './shared/registration.service';
-import { PasswordToggleDirective } from './shared/password-toggle.directive';
+import { CustomInputTypeDirective } from './shared/custom-input-type.directive';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const routes: Routes = [
@@ -27,7 +27,7 @@ const routes: Routes = [
   declarations: [
     RegistrationComponent,
     RegistrationFormComponent,
-    PasswordToggleDirective,
+    CustomInputTypeDirective,
   ],
   imports: [
     CommonModule,

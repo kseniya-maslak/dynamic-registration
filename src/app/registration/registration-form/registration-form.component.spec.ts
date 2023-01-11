@@ -49,10 +49,10 @@ class MockGenerateFormService {
   }
 }
 
-@Directive({ selector: 'input[appPasswordToggle]' })
+@Directive({ selector: 'input[appCustomInputType]' })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 class MockAppPasswordToggle {
-  @Input('appPasswordToggle') apply = true;
+  @Input('appCustomInputType') apply = true;
 }
 
 describe('RegistrationFormComponent', () => {
