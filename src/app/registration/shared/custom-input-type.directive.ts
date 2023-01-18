@@ -8,7 +8,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
+import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum';
 
 @Directive({
   selector: 'input[appCustomInputType]',

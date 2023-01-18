@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 
 import { RegistrationComponent } from './registration.component';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
 import {
@@ -16,28 +16,26 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { RegistrationService } from '../shared/registration.service';
-import { first, Subject } from 'rxjs';
+import { FormService } from '../../shared/form.service';
+import { first, Observable, Subject } from 'rxjs';
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RegistrationRequest } from '../model/registration-request.model';
+import { User } from '../../model/user.model';
 import { MatProgressBarHarness } from '@angular/material/progress-bar/testing';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ToastrService } from 'ngx-toastr';
-import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
-import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
+import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
+import { UserService } from '../../shared/user.service';
+import { Form } from '../../model/form.model';
 
-let fields$: Subject<RegistrationField[]>;
-let response$: Subject<null>;
+let form$: Subject<Form>;
+let response$: Subject<User>;
 
 @Injectable()
-class MockRegistrationService {
-  requestRegistrationFields() {
-    return fields$.pipe(first());
-  }
-
-  submitRegistration() {
-    return response$.pipe(first());
+class MockFormService {
+  requestRegistrationForm() {
+    return form$.pipe(first());
   }
 }
 @Injectable()
@@ -56,13 +54,19 @@ class DummyComponent {}
 })
 class MockRegistrationFormComponent {
   @Input()
-  registrationFields: RegistrationField[] = [];
+  registrationFields: Field[] = [];
 
   @Output()
-  submitForm = new EventEmitter<RegistrationRequest>();
+  submitForm = new EventEmitter<User>();
+}
+@Injectable()
+class MockUserService {
+  registerUser(): Observable<User> {
+    return response$;
+  }
 }
 
-const mock: RegistrationField[] = [
+const mock: Field[] = [
   {
     type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
@@ -95,6 +99,8 @@ describe('RegistrationComponent', () => {
   let toastrService: ToastrService;
 
   beforeEach(async () => {
+    form$ = new Subject();
+    response$ = new Subject<User>();
     await TestBed.configureTestingModule({
       imports: [
         MatProgressBarModule,
@@ -105,12 +111,16 @@ describe('RegistrationComponent', () => {
       declarations: [RegistrationComponent, MockRegistrationFormComponent],
       providers: [
         {
-          provide: RegistrationService,
-          useClass: MockRegistrationService,
+          provide: FormService,
+          useClass: MockFormService,
         },
         {
           provide: ToastrService,
           useClass: MockToastrService,
+        },
+        {
+          provide: UserService,
+          useClass: MockUserService,
         },
       ],
     }).compileComponents();
@@ -120,8 +130,6 @@ describe('RegistrationComponent', () => {
     toastrService = TestBed.inject(ToastrService);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    fields$ = new Subject();
-    response$ = new Subject();
     fixture.detectChanges();
   });
 
@@ -132,14 +140,14 @@ describe('RegistrationComponent', () => {
   it('should show loader', async () => {
     let spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeTruthy();
-    fields$.next(mock);
+    form$.next(new Form(mock));
     spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeFalsy();
   });
 
   it('should show error on failed form request', async () => {
     spyOn(toastrService, 'error');
-    fields$.error('Some error');
+    form$.error('Some error');
     let spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeTruthy();
     expect(toastrService.error).toHaveBeenCalled();
@@ -148,7 +156,7 @@ describe('RegistrationComponent', () => {
   it('should navigate to welcome on success submit', fakeAsync(() => {
     component.onSubmitForm({});
     expect(location.path()).toEqual('');
-    response$.next(null);
+    response$.next({});
     tick();
     expect(location.path()).toEqual('/welcome');
   }));

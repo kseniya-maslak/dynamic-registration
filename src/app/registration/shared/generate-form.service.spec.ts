@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
 import { GenerateFormService } from './generate-form.service';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { Injectable } from '@angular/core';
 import { GenerateValidatorService } from './generate-validator.service';
 import { ValidatorFn } from '@angular/forms';
-import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
-import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
+import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
 
-const mock: RegistrationField[] = [
+const mock: Field[] = [
   {
     type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',

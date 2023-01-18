@@ -4,4 +4,4 @@
 <app-registration-form
   [hidden]="loading$ | async"
   (submitForm)="onSubmitForm($event)"
-  [registrationFields]="registrationFields"></app-registration-form>
+  [registrationFields]="registrationForm.fields"></app-registration-form>

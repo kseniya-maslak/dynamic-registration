@@ -11,7 +11,7 @@ import {
 import { IsFieldValidationCorrect } from './is-field-validation-correct.validator';
 import { SupportedFieldTypesEnum } from './supported-field-types.enum';
 
-export class RegistrationField {
+export class Field {
   @IsEnum(SupportedFieldTypesEnum)
   type: SupportedFieldTypesEnum;
   @IsString()
@@ -28,7 +28,7 @@ export class RegistrationField {
   @IsFieldValidationCorrect({ each: true })
   validations?: FieldValidation[];
 
-  constructor(object: RegistrationField) {
+  constructor(object: Field) {
     this.type = object.type;
     this.name = object.name;
     this.label = object.label;

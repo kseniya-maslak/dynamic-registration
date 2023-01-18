@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RegistrationField } from '../model/registration-field.model';
-import { RegistrationRequest } from '../model/registration-request.model';
 import { Router } from '@angular/router';
-import { RegistrationService } from '../shared/registration.service';
 import { ToastrService } from 'ngx-toastr';
+import { Form } from '../../model/form.model';
+import { FormService } from '../../shared/form.service';
+import { User } from '../../model/user.model';
+import { UserService } from '../../shared/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -13,18 +14,19 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegistrationComponent implements OnInit {
   public loading$ = new BehaviorSubject(true);
-  public registrationFields: RegistrationField[] = [];
+  public registrationForm: Form = new Form([]);
 
   constructor(
-    private registrationService: RegistrationService,
+    private formService: FormService,
+    private userService: UserService,
     private router: Router,
     private toastr: ToastrService
   ) {}
 
   ngOnInit() {
-    this.registrationService.requestRegistrationFields().subscribe({
-      next: registrationFields => {
-        this.registrationFields = registrationFields;
+    this.formService.requestRegistrationForm().subscribe({
+      next: form => {
+        this.registrationForm = form;
       },
       error: () => {
         this.toastr.error(
@@ -38,9 +40,9 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  onSubmitForm(registrationRequest: RegistrationRequest) {
+  onSubmitForm(registrationRequest: User) {
     this.loading$.next(true);
-    this.registrationService.submitRegistration(registrationRequest).subscribe({
+    this.userService.registerUser(registrationRequest).subscribe({
       next: () => {
         this.router.navigate(['../welcome']).then();
       },
