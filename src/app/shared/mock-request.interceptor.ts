@@ -7,7 +7,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class MockRequestInterceptor implements HttpInterceptor {
@@ -28,14 +28,17 @@ export class MockRequestInterceptor implements HttpInterceptor {
       request.method === 'POST' &&
       request.url === environment.registrationApi
     ) {
-      return of(this.mockPostRegistrationResponse()).pipe(delay(1000));
+      return of(this.mockPostRegistrationResponse(request)).pipe(delay(1000));
     }
     return next.handle(request);
   }
 
-  private mockPostRegistrationResponse(): HttpResponse<null> {
+  private mockPostRegistrationResponse(
+    request: HttpRequest<unknown>
+  ): HttpResponse<unknown> {
     return new HttpResponse({
       status: 200,
+      body: request.body,
     });
   }
 }

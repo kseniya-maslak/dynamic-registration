@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { ValidatorFn, Validators } from '@angular/forms';
-import { FieldValidation } from '../model/field-validation.model';
-import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
+import { FieldValidation } from '../../model/field-validation.model';
+import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
 
 @Injectable()
 export class GenerateValidatorService {
   constructor() {}
 
-  generateValidatorFunction(formField: RegistrationField): ValidatorFn {
+  generateValidatorFunction(formField: Field): ValidatorFn {
     return control => {
       if (formField.required) {
         if (Validators.required(control)) {

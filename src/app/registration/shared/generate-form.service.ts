@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { GenerateValidatorService } from './generate-validator.service';
 
@@ -7,7 +7,7 @@ import { GenerateValidatorService } from './generate-validator.service';
 export class GenerateFormService {
   constructor(private validatorService: GenerateValidatorService) {}
 
-  generateForm(registrationFields: RegistrationField[]) {
+  generateForm(registrationFields: Field[]) {
     let form: { [key: string]: FormControl } = {};
     for (let field of registrationFields) {
       form[field.name] = this.generateFormControl(field);
@@ -15,7 +15,7 @@ export class GenerateFormService {
     return new FormGroup(form);
   }
 
-  private generateFormControl(formField: RegistrationField): FormControl {
+  private generateFormControl(formField: Field): FormControl {
     const validator =
       this.validatorService.generateValidatorFunction(formField);
     return new FormControl('', validator);

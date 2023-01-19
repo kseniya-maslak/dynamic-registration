@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { GenerateFormService } from '../shared/generate-form.service';
-import { RegistrationRequest } from '../model/registration-request.model';
+import { User } from '../../model/user.model';
 
 @Component({
   selector: 'app-registration-form',
@@ -11,13 +11,13 @@ import { RegistrationRequest } from '../model/registration-request.model';
 })
 export class RegistrationFormComponent {
   form: FormGroup = new FormGroup({});
-  private _registrationFields: RegistrationField[] = [];
+  private _registrationFields: Field[] = [];
 
   @Output()
-  submitForm = new EventEmitter<RegistrationRequest>();
+  submitForm = new EventEmitter<User>();
 
   @Input()
-  set registrationFields(registrationFields: RegistrationField[]) {
+  set registrationFields(registrationFields: Field[]) {
     this.form = this.formService.generateForm(registrationFields);
     this._registrationFields = registrationFields;
   }

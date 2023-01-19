@@ -1,16 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RegistrationService } from './registration.service';
+import { FormService } from './form.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { RegistrationField } from '../model/registration-field.model';
-import { of } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Field } from '../model/field.model';
+import { Observable, of } from 'rxjs';
 import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
 import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
-import { RegistrationForm } from '../model/registration-form.model';
+import { Form } from '../model/form.model';
+import { Injectable } from '@angular/core';
+import { User } from '../model/user.model';
+import { UserService } from './user.service';
 
-const mock: RegistrationField[] = [
+const mock: Field[] = [
   {
     type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
@@ -36,7 +39,7 @@ const mock: RegistrationField[] = [
   },
 ];
 
-const mockInvalid: RegistrationField[] = [
+const mockInvalid: Field[] = [
   {
     type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
@@ -62,16 +65,31 @@ const mockInvalid: RegistrationField[] = [
     ],
   },
 ];
-describe('RegistrationService', () => {
-  let service: RegistrationService;
+
+@Injectable()
+class MockUserService {
+  registerUser(user: User): Observable<User> {
+    return of(user);
+  }
+  resetUser() {}
+}
+
+describe('FormService', () => {
+  let service: FormService;
   let http: HttpClient;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [RegistrationService],
+      providers: [
+        FormService,
+        {
+          provide: UserService,
+          useClass: MockUserService,
+        },
+      ],
     });
-    service = TestBed.inject(RegistrationService);
+    service = TestBed.inject(FormService);
     http = TestBed.inject(HttpClient);
   });
 
@@ -79,25 +97,19 @@ describe('RegistrationService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('on submitRegistration should send request', () => {
-    spyOn(http, 'post');
-    service.submitRegistration({});
-    expect(http.post).toHaveBeenCalledWith(environment.registrationApi, {});
-  });
-
   it('on requestRegistrationFields should return checked results', (done: DoneFn) => {
     spyOn(http, 'get').and.returnValue(of(mock));
-    const response$ = service.requestRegistrationFields();
+    const response$ = service.requestRegistrationForm();
     expect(http.get).toHaveBeenCalledWith(environment.registrationFieldApi);
     response$.subscribe(field => {
-      expect(field).toEqual(new RegistrationForm(mock).form);
+      expect(field).toEqual(new Form(mock));
       done();
     });
   });
 
   it('on requestRegistrationFields should fail on invalid results', (done: DoneFn) => {
     spyOn(http, 'get').and.returnValue(of(mockInvalid));
-    const response$ = service.requestRegistrationFields();
+    const response$ = service.requestRegistrationForm();
     expect(http.get).toHaveBeenCalledWith(environment.registrationFieldApi);
     response$.subscribe({
       next: () => done.fail('Error expected with invalid response'),

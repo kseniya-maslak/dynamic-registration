@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { GenerateValidatorService } from './generate-validator.service';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
-import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
+import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
 
-const mock: RegistrationField = {
+const mock: Field = {
   type: SupportedFieldTypesEnum.PHONE,
   name: 'phone_number',
   label: 'Mobile number',

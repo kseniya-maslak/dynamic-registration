@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationFormComponent } from './registration-form.component';
 import { GenerateFormService } from '../shared/generate-form.service';
 import { Directive, Injectable, Input } from '@angular/core';
-import { RegistrationField } from '../model/registration-field.model';
+import { Field } from '../../model/field.model';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HarnessLoader } from '@angular/cdk/testing';
@@ -11,12 +11,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonHarness } from '@angular/material/button/testing';
-import { SupportedValidatorsEnum } from '../model/supported-validators.enum';
-import { SupportedFieldTypesEnum } from '../model/supported-field-types.enum';
+import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
+import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum';
 
 let mockFormGroup: FormGroup;
 
-const mock: RegistrationField[] = [
+const mock: Field[] = [
   {
     type: SupportedFieldTypesEnum.PHONE,
     name: 'phone_number',
