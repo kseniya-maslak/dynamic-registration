@@ -83,10 +83,7 @@ describe('FormService', () => {
       imports: [HttpClientTestingModule],
       providers: [
         FormService,
-        {
-          provide: UserService,
-          useClass: MockUserService,
-        },
+        { provide: UserService, useClass: MockUserService },
       ],
     });
     service = TestBed.inject(FormService);

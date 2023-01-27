@@ -12,14 +12,8 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   registerUser(user: User): Observable<User> {
-    return this.http.post<User>(environment.registrationApi, user).pipe(
-      tap(user => {
-        this._user$.next(user);
-      })
-    );
-  }
-
-  resetUser(): void {
-    this._user$.next(null);
+    return this.http
+      .post<User>(environment.registrationApi, user)
+      .pipe(tap(user => this._user$.next(user)));
   }
 }

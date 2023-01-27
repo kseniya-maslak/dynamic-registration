@@ -16,8 +16,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormService } from '../../shared/form.service';
-import { first, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { User } from '../../model/user.model';
@@ -28,20 +27,10 @@ import { SupportedFieldTypesEnum } from '../../model/supported-field-types.enum'
 import { SupportedValidatorsEnum } from '../../model/supported-validators.enum';
 import { UserService } from '../../shared/user.service';
 import { Form } from '../../model/form.model';
+import { ActivatedRoute } from '@angular/router';
 
-let form$: Subject<Form>;
+let form$: Subject<{ form: Form }>;
 let response$: Subject<User>;
-
-@Injectable()
-class MockFormService {
-  requestRegistrationForm() {
-    return form$.pipe(first());
-  }
-}
-@Injectable()
-class MockToastrService {
-  error() {}
-}
 
 @Component({
   template: '',
@@ -64,6 +53,11 @@ class MockUserService {
   registerUser(): Observable<User> {
     return response$;
   }
+}
+
+@Injectable()
+class MockToastrService {
+  error() {}
 }
 
 const mock: Field[] = [
@@ -110,18 +104,9 @@ describe('RegistrationComponent', () => {
       ],
       declarations: [RegistrationComponent, MockRegistrationFormComponent],
       providers: [
-        {
-          provide: FormService,
-          useClass: MockFormService,
-        },
-        {
-          provide: ToastrService,
-          useClass: MockToastrService,
-        },
-        {
-          provide: UserService,
-          useClass: MockUserService,
-        },
+        { provide: ToastrService, useClass: MockToastrService },
+        { provide: UserService, useClass: MockUserService },
+        { provide: ActivatedRoute, useValue: { data: form$ } },
       ],
     }).compileComponents();
 
@@ -140,17 +125,9 @@ describe('RegistrationComponent', () => {
   it('should show loader', async () => {
     let spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeTruthy();
-    form$.next(new Form(mock));
+    form$.next({ form: new Form(mock) });
     spinner = await loader.hasHarness(MatProgressBarHarness);
     expect(spinner).toBeFalsy();
-  });
-
-  it('should show error on failed form request', async () => {
-    spyOn(toastrService, 'error');
-    form$.error('Some error');
-    let spinner = await loader.hasHarness(MatProgressBarHarness);
-    expect(spinner).toBeTruthy();
-    expect(toastrService.error).toHaveBeenCalled();
   });
 
   it('should navigate to welcome on success submit', fakeAsync(() => {

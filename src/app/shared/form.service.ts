@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { validateSync } from 'class-validator';
 import { Form } from '../model/form.model';
-import { UserService } from './user.service';
 
 @Injectable()
 export class FormService {
@@ -13,13 +12,17 @@ export class FormService {
     new BehaviorSubject<Form | null>(null);
   readonly form$: Observable<Form | null> = this._form$.asObservable();
 
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor(private http: HttpClient) {}
 
   requestRegistrationForm(): Observable<Form> {
     return this.http.get<Field[]>(environment.registrationFieldApi).pipe(
       map(fields => this.validateForm(fields)),
-      tap(form => this.setForm(form))
+      tap(form => this._form$.next(form))
     );
+  }
+
+  getForm(): Form | null {
+    return this._form$.getValue();
   }
 
   private validateForm(fields: Field[]): Form {
@@ -29,10 +32,5 @@ export class FormService {
       throw new Error('Form validation error');
     }
     return form;
-  }
-
-  private setForm(form: Form) {
-    this._form$.next(form);
-    this.userService.resetUser();
   }
 }
