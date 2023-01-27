@@ -11,18 +11,9 @@ export class AuthGuard implements CanLoad {
     private toast: ToastrService,
     private router: Router
   ) {}
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
+  canLoad(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> {
     return this.userService.user$.pipe(
-      map(user => {
-        return user != null;
-      }),
+      map(user => user != null),
       tap(isUser => {
         if (!isUser) {
           this.toast.error('No user provided');

@@ -33,8 +33,8 @@ export class Field {
     this.name = object.name;
     this.label = object.label;
     this.required = object.required;
-    this.validations = object.validations?.map(validation => {
-      return new FieldValidation(validation);
-    });
+    this.validations = object.validations?.map(
+      validation => new FieldValidation(validation)
+    );
   }
 }

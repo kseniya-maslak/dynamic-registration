@@ -6,7 +6,7 @@
     "required": true,
     "validations": [
       {
-        "name": "regex",
+        "name": "rege",
         "message": "Only English characters are allowed.",
         "value": "^[a-zA-Z0-9]*$"
       },

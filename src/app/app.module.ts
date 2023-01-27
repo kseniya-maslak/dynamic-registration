@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { MockRequestInterceptor } from './shared/mock-request.interceptor';
 import { AuthGuard } from './shared/auth.guard';
+import { FormResolver } from './shared/form.resolver';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import { AuthGuard } from './shared/auth.guard';
   providers: [
     FormService,
     AuthGuard,
+    FormResolver,
     UserService,
     environment.mock
       ? [
